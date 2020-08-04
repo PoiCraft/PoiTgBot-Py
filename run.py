@@ -15,10 +15,12 @@ bot.
 """
 
 import logging
+import token
+import Hitokoto
 
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
-                          ConversationHandler)
+                          ConversationH
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -26,28 +28,24 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-, , ,  = range(4)
-#这里需要改
 
+def yy(update, context):
+    update.message.reply_text('Hitokoto.text')
 
 def main():
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
-    updater = Updater("TOKEN", use_context=True)
-#还有TOKEN
+    updater = Updater("token.token", use_context=True)
+
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
-    # Add conversation handler with the states GENDER, PHOTO, LOCATION and BIO
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('list', list)],
+        entry_points=[CommandHandler('start', start)],
 
-        states={
-
-        },
-#这里添加命令
+        
         fallbacks=[CommandHandler('bye', bye)]
     )
 
