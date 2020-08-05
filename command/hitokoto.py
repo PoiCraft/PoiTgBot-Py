@@ -11,7 +11,7 @@ def Hitokoto(update, context):
         ret = content['hitokoto'] + '\n---' + ' ' + content['from']
     else:
         ret = content['hitokoto'] + '\n---' + content['from_who'] + ' ' + content['from']
-    context.bot.send_message(chat_id=update.effective_chat.id, text=ret)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=ret, reply_to_message_id=update.message.message_id)
 
 
 HitokotoHandler = CommandHandler('yy', Hitokoto)
