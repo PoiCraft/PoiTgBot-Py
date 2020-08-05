@@ -27,7 +27,7 @@ def XBoxInput(update, context):
         return ConversationHandler.END
 
 
-def BindCanel(update, context):
+def BindCancel(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="绑定请求已被取消")
     return ConversationHandler.END
 
@@ -37,5 +37,5 @@ BindHandler = ConversationHandler(
     states={
         0: [MessageHandler(Filters.all, XBoxInput, )]
     },
-    fallbacks=[CommandHandler('canel', BindCanel)]
+    fallbacks=[CommandHandler('cancel', BindCancel)]
 )
