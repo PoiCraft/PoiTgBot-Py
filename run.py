@@ -1,9 +1,11 @@
 import logging
-from telegram.ext import Updater
-from config import BOT_TOKEN
-from command import command
 
-updater = Updater(token=BOT_TOKEN, use_context=True)
+from telegram.ext import Updater
+
+from command import command
+from config import BOT_TOKEN, REQUEST_KWARGS
+
+updater = Updater(token=BOT_TOKEN, use_context=True, request_kwargs=REQUEST_KWARGS)
 dispatcher = updater.dispatcher
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
