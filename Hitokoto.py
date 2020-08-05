@@ -1,4 +1,6 @@
-import config
 import requests
-        text = requests.get('https://v1.hitokoto.cn/?c=a')
+import json
 
+
+Return = requests.get('https://v1.hitokoto.cn/?c=a')
+Json = json.loads(Return.text)
