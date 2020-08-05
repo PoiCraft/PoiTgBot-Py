@@ -15,6 +15,6 @@ def yy(update, context):
 
 start_handler = CommandHandler('yy', yy)
 dispatcher.add_handler(start_handler)
-updater.start_polling()
+updater.idle()
 
 updater.stop()
