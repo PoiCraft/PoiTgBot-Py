@@ -7,6 +7,5 @@
 * 运行`git clone https://github.com/PoiCraft/PoiTgBot-Py.git --recursive`
 *    `cd PoiTgBot-Py`
 * 使用了 python-telegram-bot ,请运行`pip install -r requirements.txt` 安装依赖.
-* 运行`pip install python-telegram-bot --upgrade`来安装python-telegram-bot.
-* 修改key.py(暂定)
+* 修改config.py(即更改TOKEN)
 * 执行`python run.py`即可
