@@ -8,5 +8,5 @@
 *    `cd PoiTgBot-Py`
 * 使用了 python-telegram-bot ,请运行`pip install -r requirements.txt` 安装依赖.
 * 运行`pip install python-telegram-bot --upgrade`来安装python-telegram-bot.
-* 修改token.py(暂定)
+* 修改key.py(暂定)
 * 执行`python run.py`即可
