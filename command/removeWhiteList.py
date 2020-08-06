@@ -33,4 +33,4 @@ def removeWhiteList(update: Update, context: CallbackContext):
                                          reply_to_message_id=update.effective_message.id)
 
 
-removeWhiteListHandler = CommandHandler('removeWhiteList', removeWhiteList, allow_edited=False)
+removeWhiteListHandler = CommandHandler('removeWhiteList', removeWhiteList)
