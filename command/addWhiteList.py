@@ -1,4 +1,4 @@
-from telegram import Update, Chat
+from telegram import Update, Chat,ChatMember,User
 from telegram.ext import CommandHandler, CallbackContext
 
 from config import TELEGRAM_CHAT_ID
@@ -9,9 +9,9 @@ chat = Chat(TELEGRAM_CHAT_ID, 'group')
 
 def addWhiteList(update: Update, context: CallbackContext):
     args = context.args
-    user = update.effective_user()
+    user = update.message.from_user
     if user:
-        if chat.get_member(user.id).status == 'creator' or chat.get_member(user.id).status == 'administrator':
+        if chat.get_member(user.id).status == ChatMember.CREATOR or chat.get_member(user.id).status == ChatMember.ADMINISTRATOR:
             if len(args) != 0:
                 res = sendCommand('whitelist add %s' % args[0], '1')
                 if not res.status:
