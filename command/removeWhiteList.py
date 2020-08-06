@@ -1,7 +1,7 @@
-from telegram import Update, Chat,ChatMember
+from telegram import Update, Chat
 from telegram.ext import CommandHandler, CallbackContext
 
-from config import TELEGRAM_CHAT_ID
+from config import TELEGRAM_CHAT_ID,ADMINS_LIST
 from control.command import sendCommand
 
 chat = Chat(TELEGRAM_CHAT_ID, 'group')
@@ -11,7 +11,7 @@ def removeWhiteList(update: Update, context: CallbackContext):
     args = context.args
     user = update.message.from_user
     if user:
-        if chat.get_member(user.id).status == ChatMember.CREATOR or chat.get_member(user.id).status == ChatMember.ADMINISTRATOR:
+        if user.id in ADMINS_LIST:
             if len(args) != 0:
                 res = sendCommand('whitelist remove %s' % args[0], '1')
                 if not res.status:
