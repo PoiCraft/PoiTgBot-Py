@@ -9,7 +9,7 @@ chat = Chat(TELEGRAM_CHAT_ID, 'group')
 
 def addWhiteList(update: Update, context: CallbackContext):
     args = context.args
-    user = update.effective_user
+    user = update.effective_user()
     if user:
         if chat.get_member(user.id).status == 'creator' or chat.get_member(user.id).status == 'administrator':
             if len(args) != 0:
