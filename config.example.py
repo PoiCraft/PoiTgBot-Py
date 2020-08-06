@@ -1,6 +1,3 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
 BOT_TOKEN = ''
 REQUEST_KWARGS = {
     # "USERNAME:PASSWORD@" is optional, if you need authentication:
@@ -10,10 +7,8 @@ DB_HOST = '1.1.1.1'
 DB_USER = 'potbot'
 DB_PASS = 'wdnmdcnmlgb'
 DB_NAME = 'cao'
-SERVER_HOST = '11.45.1.4:19198'
-CHAT_ID = 10
 
-engine = create_engine(
-    'mysql+pymysql://%s:%s@%s/%s' % (DB_USER, DB_PASS, DB_HOST, DB_NAME), echo=True)
+POIMANAGER_API_URL = 'http://127.0.0.1:5500'
+POIMANAGER_API_TOKEN = 'NOKD0MRCecYilELkTJ2pBx1QojIAFq6m'
 
-SESSION = sessionmaker(bind=engine)
+TELEGRAM_CHAT_ID = '1919810'

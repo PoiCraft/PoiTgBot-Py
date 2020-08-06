@@ -1,10 +1,10 @@
-from config import SERVER_HOST, CHAT_ID
-from websocket import create_connection
+from telegram import Update, Chat
 from telegram.ext import CommandHandler, CallbackContext
-from telegram import Update, Chat, ChatMember
-import time
 
-chat = Chat(CHAT_ID, 'group')
+from config import TELEGRAM_CHAT_ID
+from control.command import sendCommand
+
+chat = Chat(TELEGRAM_CHAT_ID, 'group')
 
 
 def removeWhiteList(update: Update, context: CallbackContext):
@@ -13,22 +13,19 @@ def removeWhiteList(update: Update, context: CallbackContext):
     if user:
         if chat.get_member(user.id).status == 'creator' or chat.get_member(user.id).status == 'administrator':
             if len(args) != 0:
-                try:
-                    ws = create_connection(SERVER_HOST)
-                except:
+                res = sendCommand('whitelist remove %s' % args[0], '1')
+                if not res.status:
                     context.bot.send_message(chat_id=update.effective_chat.id,
-                                             text='服务器去火星了,等会儿再试试吧!',
+                                             text='服务器去火星了,等会儿再试试吧! 错误信息:' % res.msg,
                                              reply_to_message_id=update.effective_message.id)
-                ws.send('whitelist remove %s' % args[0])
-                time.sleep(0.1)
-                result = ws.recv()
-                if result == "Player removed from whitelist":
+
+                if res.content[0] == "Player removed from whitelist":
                     context.bot.send_message(
-                        chat_id=update.effective_chat.id, text=('%s已经从Poicraft的白名单中消失了呢!' % args[0]),
+                        chat_id=update.effective_chat.id, text=('%s已经从PoiCraft的白名单中消失了呢!' % args[0]),
                         reply_to_message_id=update.effective_message.id)
                 else:
                     context.bot.send_message(chat_id=update.effective_chat.id,
-                                             text=('Poicraft的白名单并找不到%s呢!' % args[0]),
+                                             text=('PoiCraft的白名单并找不到%s呢!' % args[0]),
                                              reply_to_message_id=update.effective_message.id)
             elif len(args) == 0:
                 context.bot.send_message(chat_id=update.effective_chat.id,
