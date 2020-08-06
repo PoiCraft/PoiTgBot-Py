@@ -10,6 +10,8 @@ DB_HOST = '1.1.1.1'
 DB_USER = 'potbot'
 DB_PASS = 'wdnmdcnmlgb'
 DB_NAME = 'cao'
+SERVER_HOST = '11.45.1.4:19198'
+CHAT_ID = 10
 
 engine = create_engine(
     'mysql+pymysql://%s:%s@%s/%s' % (DB_USER, DB_PASS, DB_HOST, DB_NAME), echo=True)
