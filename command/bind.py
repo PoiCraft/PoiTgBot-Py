@@ -6,10 +6,14 @@ from database.player import get_user_by_user_id, get_user_by_xbox_id
 
 def Bind(update, context):
     if get_user_by_user_id(update.effective_user.id) is None:
-        context.bot.send_message(chat_id=update.effective_chat.id, text='欢迎绑定账号，请输入您的 XBoxID')
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text='欢迎绑定账号，请输入您的 XBoxID',
+                                 reply_to_message_id=update.effective_message.id)
         return 0
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text='您已经绑定过账号了哦，请先解绑后再绑定')
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text='您已经绑定过账号了哦，请先解绑后再绑定',
+                                 reply_to_message_id=update.effective_message.id)
         return ConversationHandler.END
 
 
