@@ -1,12 +1,12 @@
-from telegram import Update
-from telegram.ext import CommandHandler, CallbackContext
-from control.command import sendCommand
-from config import RANDOM_TP
-from database.database import get_session, Player
-from sqlalchemy.orm.exc import NoResultFound
 import random
 import time
 
+from telegram import Update
+from telegram.ext import CommandHandler, CallbackContext
+
+from config import RANDOM_TP
+from control.command import sendCommand
+from database.database import get_session
 from database.player import get_player_by_player_id
 
 
@@ -32,7 +32,7 @@ def rtp(update: Update, context: CallbackContext):
             z = random.randint(30000, 70000) * -1  # 随机Z轴
             sendCommand('effect \"%s\" resistance 15 5 true' % player.XBoxID, '1')
             time.sleep(0.2)
-            sendCommand('tp \"%s\" %s 120 %s' % player.XBoxID, x, z)
+            sendCommand('tp \"%s\" %s 120 %s' % (player.XBoxID, x, z), '0')
             context.bot.send_message(chat_id=update.effective_chat.id,
                                      text=f'您已被传送至{x},120,{z}\n使用次数:{player.TpNumber}/{RANDOM_TP}\n传送本不易，且行且珍惜',
                                      reply_to_message_id=update.message.message_id)
