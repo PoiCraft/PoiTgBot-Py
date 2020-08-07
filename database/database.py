@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, Column, Integer, Text
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker, scoped_session, relationship
 
 from config import DB_USER, DB_PASS, DB_HOST, DB_NAME
 
@@ -15,6 +15,14 @@ class Player(base):
     TelegramID = Column(Integer, primary_key=True)
     XBoxID = Column(Text)
     TpNumber = Column(Integer)
+    Poi_coin = Column(Integer)
+    TeamIN = relationship('Team', backref='members')
+
+
+class Team(base):
+    __tablename__ = 'team'
+    ID = Column(Integer, autoincrement=True, primary_key=True)
+    LeaderID = Column(Integer)
 
 
 def create_db():
