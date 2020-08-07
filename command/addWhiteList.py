@@ -1,7 +1,7 @@
-from telegram import Update, Chat,ChatMember,User
+from telegram import Update, Chat
 from telegram.ext import CommandHandler, CallbackContext
 
-from config import TELEGRAM_CHAT_ID,ADMINS_LIST
+from config import TELEGRAM_CHAT_ID, ADMINS_LIST
 from control.command import sendCommand
 
 chat = Chat(TELEGRAM_CHAT_ID, 'group')

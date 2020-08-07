@@ -1,10 +1,9 @@
-from telegram.ext import ConversationHandler, CommandHandler, MessageHandler, Filters,CallbackContext
 from telegram import Update
-
-from database.database import get_session, Player
-from database.player import get_player_by_player_id, get_player_by_xbox_id
+from telegram.ext import ConversationHandler, CommandHandler, MessageHandler, Filters, CallbackContext
 
 from config import RANDOM_TP
+from database.database import get_session, Player
+from database.player import get_player_by_player_id, get_player_by_xbox_id
 
 
 def Bind(update, context):
@@ -20,7 +19,7 @@ def Bind(update, context):
         return ConversationHandler.END
 
 
-def XBoxInput(update:Update, context:CallbackContext):
+def XBoxInput(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.effective_chat.id, text="请稍等，我们正在绑定")
     if get_player_by_xbox_id(update.message.text) is None:
         session = get_session()

@@ -16,7 +16,7 @@ class Player(base):
     xbox_id = Column(Text)
     tp_number = Column(Integer)
     poi_coin = Column(Integer)
-    team_id = Column(Integer,ForeignKey('team.id'))
+    team_id = Column(Integer, ForeignKey('team.id'))
     team = relationship('Team')
 
 

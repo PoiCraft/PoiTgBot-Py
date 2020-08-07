@@ -1,6 +1,6 @@
+from command.addWhiteList import addWhiteListHandler
 from command.bind import BindHandler
 from command.hitokoto import HitokotoHandler
-from command.addWhiteList import addWhiteListHandler
 from command.id import GetIDHandler
 from command.removeWhiteList import removeWhiteListHandler
 from command.rtp import rtpHandler
