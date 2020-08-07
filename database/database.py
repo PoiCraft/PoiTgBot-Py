@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, Text
+from sqlalchemy import create_engine, Column, Integer, Text, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session, relationship
 
@@ -12,17 +12,18 @@ Session = sessionmaker(bind=engine)
 
 class Player(base):
     __tablename__ = 'player'
-    TelegramID = Column(Integer, primary_key=True)
-    XBoxID = Column(Text)
-    TpNumber = Column(Integer)
-    Poi_coin = Column(Integer)
-    TeamIN = relationship('Team', backref='members')
+    id = Column(Integer, primary_key=True)
+    xbox_id = Column(Text)
+    tp_number = Column(Integer)
+    poi_coin = Column(Integer)
+    team_id = Column(Integer, ForeignKey('team.id'))
+    team = relationship('Team')
 
 
 class Team(base):
     __tablename__ = 'team'
-    ID = Column(Integer, autoincrement=True, primary_key=True)
-    LeaderID = Column(Integer)
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    leader_id = Column(Integer)
 
 
 def create_db():
