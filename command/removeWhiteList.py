@@ -14,23 +14,22 @@ def removeWhiteList(update: Update, context: CallbackContext):
         if user.id in ADMINS_LIST:
             if len(args) != 0:
                 res = sendCommand('whitelist remove %s' % args[0], '1')
-                if not res.status:
+                if not res['status']:
                     context.bot.send_message(chat_id=update.effective_chat.id,
                                              text='服务器去火星了,等会儿再试试吧! 错误信息:' % res.msg,
-                                             reply_to_message_id=update.effective_message.id)
-
-                if res.content[0] == "Player removed from whitelist":
+                                             reply_to_message_id=update.message.message_id)
+                if res['content'][0]['log'] == "Player removed from whitelist":
                     context.bot.send_message(
                         chat_id=update.effective_chat.id, text=('%s已经从PoiCraft的白名单中消失了呢!' % args[0]),
-                        reply_to_message_id=update.effective_message.id)
+                        reply_to_message_id=update.message.message_id)
                 else:
                     context.bot.send_message(chat_id=update.effective_chat.id,
                                              text=('PoiCraft的白名单并找不到%s呢!' % args[0]),
-                                             reply_to_message_id=update.effective_message.id)
+                                             reply_to_message_id=update.message.message_id)
             elif len(args) == 0:
                 context.bot.send_message(chat_id=update.effective_chat.id,
-                                         text='/removeWhiteList后面必须跟上游戏ID嗷，例：/removeWhiteList HelloWorld',
-                                         reply_to_message_id=update.effective_message.id)
+                                         text='/removeWhiteList 后面必须跟上游戏ID嗷，例：/removeWhiteList HelloWorld',
+                                         reply_to_message_id=update.message.message_id)
 
 
 removeWhiteListHandler = CommandHandler('removeWhiteList', removeWhiteList)

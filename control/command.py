@@ -17,15 +17,15 @@ def sendCommand(cmd: str, line: str):
         urllib.parse.urlencode(param)
     ))
     ret = json.loads(ret.text)
-    if (ret.code != 200) or (ret.msg != "OK"):
+    if (ret['code'] != 200) or (ret['msg'] != "OK"):
         return {
             'status': False,
-            'msg': ret.msg,
+            'msg': ret['msg'],
             'content': []
         }
     else:
         return {
             'status': True,
-            'msg': ret.msg,
-            'content': ret.content
+            'msg': ret['msg'],
+            'content': ret['content']
         }
