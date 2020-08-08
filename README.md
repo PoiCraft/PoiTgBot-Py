@@ -1,4 +1,7 @@
 # PoiTgBot
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b2e8d306b6b44021931e079a34f40c61)](https://app.codacy.com/gh/PoiCraft/PoiTgBot-Py?utm_source=github.com&utm_medium=referral&utm_content=PoiCraft/PoiTgBot-Py&utm_campaign=Badge_Grade_Settings)
+
 一个允许玩家和管理员通过 Telegram 对 Bedrock 服务器进行操作的简易机器人.
 此机器人为20人及以下，玩家之间和睦友好，启用白名单制的小型服务器设计。不适用于人数较多，人员较杂的大型服务器.
 ## 如何使用

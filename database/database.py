@@ -24,6 +24,7 @@ class Team(base):
     __tablename__ = 'team'
     id = Column(Integer, autoincrement=True, primary_key=True)
     leader_id = Column(Integer)
+    member = relationship("Player")
 
 
 def create_db():
