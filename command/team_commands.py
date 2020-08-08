@@ -1,7 +1,7 @@
 from telegram.ext import CommandHandler, CallbackContext, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from database.database import get_session, Player, Team
-from control.team_api import create_team, join_team
+from control.team_api import create_team
 from database.player import get_player_by_player_id
 from config import TEAM_MEMBER_MAX
 import re
@@ -9,7 +9,6 @@ import re
 
 def create_new_team(update: Update, context: CallbackContext):
     user_id = update.message.from_user.id
-    session = get_session()
     player = get_player_by_player_id(user_id)
     if player is not None:
         if player.team is None:
@@ -108,4 +107,4 @@ def join_team_callback(update: Update, context: CallbackContext):
 
 createTeamHandler = CommandHandler('create_new_team', create_new_team)
 recruitHandler = CommandHandler('recruit', recruit)
-team_button_handler = CallbackQueryHandler(join_team_callback, pattern=r'join[0-9]*')
+teamButtonHandler = CallbackQueryHandler(join_team_callback, pattern=r'join[0-9]*')
