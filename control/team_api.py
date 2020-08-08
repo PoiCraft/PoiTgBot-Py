@@ -6,39 +6,42 @@ from database.database import get_session, Player, Team
 def create_team(leaderID: int):
     try:
         session = get_session()
-        new_team = Team(leaderID=leaderID)
+        new_team = Team(leader_id=leaderID)
         session.add(new_team)
-        player = session.query(Player).filter(Player.TelegramID == leaderID).one()
-        player.TeamIN = new_team
+        session.commit()
+        player = session.query(Player).filter(Player.id == leaderID).one()
+        player.team_id = new_team.id
         session.commit()
         session.close()
-        return True
+        return {'result': True, 'team_id': new_team.id}
     except NoResultFound:
-        return False
+        return {'result': False, 'team_id': None}
 
 
 def join_team(userID: int, teamID: int = None, leaderID: int = None):
     try:
         session = get_session()
         if teamID is not None:
-            team = session.query(Team).filter(Team.ID == teamID).one()
+            team = session.query(Team).filter(Team.id == teamID).one()
         elif leaderID is not None:
-            team = session.query(Player).filter(Player.TelegramID == leaderID).one().TeamIN
-        player = session.query(Player).filter(Player.TelegramID == userID).one()
-        player.TeamIN = team
+            team = session.query(Team).filter(Team.leader_id == leaderID).one()
+        player = session.query(Player).filter(Player.id == userID).one()
+        player.team_id = team.id
         session.commit()
         session.close()
-        return True
+        return {'result': True, 'team_id': team.id}
     except NoResultFound:
-        return False
+        return {'result': False, 'team_id': None}
 
 
 def leave_team(userID: int):
     try:
         session = get_session()
-        session.query(Player).filter(Player.TelegramID == userID).one().TeamIN = None
+        player = session.query(Player).filter(Player.id == userID).one()
+        team_id = player.team_id
+        player.team_id = None
         session.commit()
         session.close()
-        return True
+        return {'result': True, 'team_id': team_id}
     except NoResultFound:
-        return False
+        return {'result': False, 'team_id': team_id}

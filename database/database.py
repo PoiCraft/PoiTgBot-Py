@@ -17,7 +17,7 @@ class Player(base):
     tp_number = Column(Integer)
     poi_coin = Column(Integer)
     team_id = Column(Integer, ForeignKey('team.id'))
-    team = relationship('Team')
+    team = relationship('Team',backref = 'members')
 
 
 class Team(base):
