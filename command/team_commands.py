@@ -14,7 +14,7 @@ def create_new_team(update: Update, context: CallbackContext):
         if player.team is None:
             if create_team(player.id)['result']:
                 context.bot.send_message(chat_id=update.effective_chat.id,
-                                         text='创建队伍成功！请使用/recruit招募成员',
+                                         text='创建队伍成功！请使用/recruit 招募成员',
                                          reply_to_message_id=update.message.message_id)
             else:
                 context.bot.send_message(chat_id=update.effective_chat.id,
@@ -45,12 +45,12 @@ def recruit(update: Update, context: CallbackContext):
                                  text='发起招募失败!您不是队长。',
                                  reply_to_message_id=update.message.message_id)
         return
-    members = team.members
+    team_members = team.members
     keyboard = [InlineKeyboardButton('Join!!!', callback_data=('join'.join(str(team.id))))]
     text1 = ''
-    if len(members) < TEAM_MEMBER_MAX:
-        if len(members) != 0:
-            for i in members:
+    if len(team_members) < TEAM_MEMBER_MAX:
+        if len(team_members) != 0:
+            for i in team_members:
                 text1.join(i.xbox_id + '\n')
         else:
             text1.join('\n')
@@ -60,7 +60,8 @@ def recruit(update: Update, context: CallbackContext):
                                  reply_to_message_id=update.message.message_id)
         return
     context.bot.send_message(chat_id=update.effective_chat.id,
-                             text=('%s的队伍正在招募(%s/3)，现有成员：\n %s' % leader.xbox_id, str(len(members)), text1),
+                             text=('%s的队伍正在招募(%s/%s)，现有成员：\n %s' %
+                                   leader.xbox_id, str(len(members)), str(TEAM_MEMBER_MAX), text1),
                              reply_markup=InlineKeyboardMarkup(keyboard))
 
 
@@ -80,28 +81,29 @@ def join_team_callback(update: Update, context: CallbackContext):
                                  text='不存在的队伍！',
                                  reply_to_message_id=update.message.message_id)
         return
-    members = team.members
-    if len(members) == TEAM_MEMBER_MAX:
+    team_members = team.members
+    if len(team_members) == TEAM_MEMBER_MAX:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text='队伍已满！无法加入。',
                                  reply_to_message_id=update.message.message_id)
         return
     player.team_id = team_id
     session.commit()
-    members = team.members
+    team_members = team.members
     text = ''
     leader = get_player_by_player_id(team.leader_id)
     keyboard = [InlineKeyboardButton('Join!!!', callback_data=('join'.join(str(team.id))))]
-    for i in members:
+    for i in team_members:
         text.join(i.xbox_id + '\n')
-    if len(members) == TEAM_MEMBER_MAX:
+    if len(team_members) == TEAM_MEMBER_MAX:
         context.bot.edit_message_text(chat_id=query.message.chat_id,
                                       message_id=query.message.message_id,
                                       text=('%s的队伍已满！现有成员：\n%s' % leader.xbox_id, text))
     else:
         context.bot.edit_message_text(chat_id=query.message.chat_id,
                                       message_id=query.message.message_id,
-                                      text=('%s的队伍正在招募(%s/3)，现有成员：\n %s' % leader.xbox_id, str(len(members)), text),
+                                      text=('%s的队伍正在招募(%s/%s)，现有成员：\n %s' %
+                                            leader.xbox_id, str(len(team_members)), str(TEAM_MEMBER_MAX), text),
                                       reply_markup=InlineKeyboardMarkup(keyboard))
 
 
