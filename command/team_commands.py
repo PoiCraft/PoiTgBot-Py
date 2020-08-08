@@ -8,9 +8,9 @@ from config import TEAM_MEMBER_MAX
 
 def create_new_team(update: Update, context: CallbackContext):
     user_id = update.message.from_user.id
-    try:
-        session = get_session()
-        player = get_player_by_player_id(user_id)
+    session = get_session()
+    player = get_player_by_player_id(user_id)
+    if player is not None:
         if player.team is None:
             if create_team(player.id)['result']:
                 context.bot.send_message(chat_id=update.effective_chat.id,
@@ -24,7 +24,7 @@ def create_new_team(update: Update, context: CallbackContext):
             context.bot.send_message(chat_id=update.effective_chat.id,
                                      text='创建队伍失败！您已经加入或创建了队伍。',
                                      reply_to_message_id=update.message.message_id)
-    except:
+    else:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text='创建队伍失败！您还没有绑定玩家信息。',
                                  reply_to_message_id=update.message.message_id)
