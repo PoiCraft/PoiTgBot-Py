@@ -61,7 +61,7 @@ def recruit(update: Update, context: CallbackContext):
         return
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text=('%s的队伍正在招募(%s/%s)，现有成员：\n %s' %
-                                   leader.xbox_id, str(len(members)), str(TEAM_MEMBER_MAX), text1),
+                                   leader.xbox_id, str(len(team_members)), str(TEAM_MEMBER_MAX), text1),
                              reply_markup=InlineKeyboardMarkup(keyboard))
 
 
