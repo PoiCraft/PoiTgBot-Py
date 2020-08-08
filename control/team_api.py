@@ -1,5 +1,6 @@
-from database.database import get_session, Player, Team
 from sqlalchemy.orm.exc import NoResultFound
+
+from database.database import get_session, Player, Team
 
 
 def create_team(leaderID: int):
