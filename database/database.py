@@ -17,13 +17,13 @@ class Player(base):
     tp_number = Column(Integer)
     poi_coin = Column(Integer)
     team_id = Column(Integer, ForeignKey('team.id'))
-    team = relationship('Team')
 
 
 class Team(base):
     __tablename__ = 'team'
     id = Column(Integer, autoincrement=True, primary_key=True)
     leader_id = Column(Integer)
+    member = relationship("Player")
 
 
 def create_db():
