@@ -11,7 +11,6 @@ def create_team(leaderID: int):
         session.commit()
         player = session.query(Player).filter(Player.id == leaderID).one()
         player.team_id = new_team.id
-        session.add(player)
         session.commit()
         session.close()
         return {'result': True, 'team_id': new_team.id}
@@ -28,7 +27,6 @@ def join_team(userID: int, teamID: int = None, leaderID: int = None):
             team = session.query(Team).filter(Team.leader_id == leaderID).one()
         player = session.query(Player).filter(Player.id == userID).one()
         player.team_id = team.id
-        session.add(player)
         session.commit()
         session.close()
         return {'result': True, 'team_id': team.id}
@@ -42,7 +40,6 @@ def leave_team(userID: int):
         player = session.query(Player).filter(Player.id == userID).one()
         team_id = player.team_id
         player.team_id = None
-        session.add(player)
         session.commit()
         session.close()
         return {'result': True, 'team_id': team_id}
