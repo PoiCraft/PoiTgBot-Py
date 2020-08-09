@@ -1,8 +1,9 @@
 from telegram.ext import CommandHandler, CallbackContext, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from database.database import get_session, Player, Team
-from control.team_api import create_team
+from database.database import get_session
+from control.team_api import create_team, join_team, leave_team
 from database.player import get_player_by_player_id
+from database.team import get_team_by_team_id, get_team_by_leader_id
 from config import TEAM_MEMBER_MAX
 import re
 
@@ -33,13 +34,13 @@ def create_new_team(update: Update, context: CallbackContext):
 def recruit(update: Update, context: CallbackContext):
     user_id = update.message.from_user.id
     session = get_session()
-    leader = session.query(Player).filter(Player.id == user_id).one_or_none()
+    leader = get_player_by_player_id(user_id)
     if leader is None:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text='发起招募失败!您还没有绑定玩家信息。',
                                  reply_to_message_id=update.message.message_id)
         return
-    team = session.query(Team).filter(Team.leader_id == user_id).one_or_none()
+    team = get_team_by_leader_id(user_id)
     if team is None:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text='发起招募失败!您不是队长。',
@@ -65,12 +66,35 @@ def recruit(update: Update, context: CallbackContext):
                              reply_markup=InlineKeyboardMarkup(keyboard))
 
 
+def quit_team(update: Update, context: CallbackContext):
+    user_id = update.message.from_user.id
+    player = get_player_by_player_id(user_id)
+    if player.team_id is not None:
+        team = get_team_by_team_id(player.team_id)
+        if team.leader_id != user_id:
+            if leave_team(user_id)['result']:
+                context.bot.send_message(chat_id=update.effective_chat.id,
+                                         text='您已成功退出队伍！',
+                                         reply_to_message_id=update.message.message_id)
+            else:
+                context.bot.send_message(chat_id=update.effective_chat.id,
+                                         text='退出队伍失败！',
+                                         reply_to_message_id=update.message.message_id)
+        else:
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text='您是队长，不能退出队伍！',
+                                     reply_to_message_id=update.message.message_id)
+    else:
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text='您没有加入任何队伍！',
+                                 reply_to_message_id=update.message.message_id)
+
+
 def join_team_callback(update: Update, context: CallbackContext):
     query = update.callback_query
     team_id = int(re.search(r'[0-9]*', query.data).group())
-    session = get_session()
     player = get_player_by_player_id(query.from_user.id)
-    team = session.query(Team).filter(Team.id == team_id).one_or_none()
+    team = get_team_by_team_id(team_id)
     if player is None:
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text='加入失败！您未绑定玩家信息。',
@@ -87,26 +111,26 @@ def join_team_callback(update: Update, context: CallbackContext):
                                  text='队伍已满！无法加入。',
                                  reply_to_message_id=update.message.message_id)
         return
-    player.team_id = team_id
-    session.commit()
-    team_members = team.members
-    text = ''
-    leader = get_player_by_player_id(team.leader_id)
-    keyboard = [InlineKeyboardButton('Join!!!', callback_data=('join'.join(str(team.id))))]
-    for i in team_members:
-        text.join(i.xbox_id + '\n')
-    if len(team_members) == TEAM_MEMBER_MAX:
-        context.bot.edit_message_text(chat_id=query.message.chat_id,
-                                      message_id=query.message.message_id,
-                                      text=('%s的队伍已满！现有成员：\n%s' % leader.xbox_id, text))
-    else:
-        context.bot.edit_message_text(chat_id=query.message.chat_id,
-                                      message_id=query.message.message_id,
-                                      text=('%s的队伍正在招募(%s/%s)，现有成员：\n %s' %
-                                            leader.xbox_id, str(len(team_members)), str(TEAM_MEMBER_MAX), text),
-                                      reply_markup=InlineKeyboardMarkup(keyboard))
+    if join_team(userID=player.id, teamID=team_id)['result']:
+        team_members = team.members
+        text = ''
+        leader = get_player_by_player_id(team.leader_id)
+        keyboard = [InlineKeyboardButton('Join!!!', callback_data=('join'.join(str(team.id))))]
+        for i in team_members:
+            text.join(i.xbox_id + '\n')
+        if len(team_members) == TEAM_MEMBER_MAX:
+            context.bot.edit_message_text(chat_id=query.message.chat_id,
+                                          message_id=query.message.message_id,
+                                          text=('%s的队伍已满！现有成员：\n%s' % leader.xbox_id, text))
+        else:
+            context.bot.edit_message_text(chat_id=query.message.chat_id,
+                                          message_id=query.message.message_id,
+                                          text=('%s的队伍正在招募(%s/%s)，现有成员：\n %s' %
+                                                leader.xbox_id, str(len(team_members)), str(TEAM_MEMBER_MAX), text),
+                                          reply_markup=InlineKeyboardMarkup(keyboard))
 
 
 createTeamHandler = CommandHandler('create_new_team', create_new_team)
 recruitHandler = CommandHandler('recruit', recruit)
 teamButtonHandler = CallbackQueryHandler(join_team_callback, pattern=r'join[0-9]*')
+quitTeamHandler = CommandHandler('quit_team', quit_team)

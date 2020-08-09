@@ -1,6 +1,8 @@
 from sqlalchemy.orm.exc import NoResultFound
 
 from database.database import get_session, Player, Team
+from database.team import get_team_by_leader_id, get_team_by_team_id
+from database.player import get_player_by_player_id
 
 
 def create_team(leaderID: int):
@@ -9,39 +11,32 @@ def create_team(leaderID: int):
         new_team = Team(leader_id=leaderID)
         session.add(new_team)
         session.commit()
-        player = session.query(Player).filter(Player.id == leaderID).one()
+        player = get_player_by_player_id(leaderID)
         player.team_id = new_team.id
         session.commit()
-        session.close()
         return {'result': True, 'team_id': new_team.id}
     except NoResultFound:
         return {'result': False, 'team_id': None}
 
 
 def join_team(userID: int, teamID: int = None, leaderID: int = None):
-    try:
-        session = get_session()
-        if teamID is not None:
-            team = session.query(Team).filter(Team.id == teamID).one()
-        elif leaderID is not None:
-            team = session.query(Team).filter(Team.leader_id == leaderID).one()
-        player = session.query(Player).filter(Player.id == userID).one()
-        player.team_id = team.id
-        session.commit()
-        session.close()
-        return {'result': True, 'team_id': team.id}
-    except NoResultFound:
+    session = get_session()
+    if teamID is not None:
+        team = get_team_by_team_id(teamID)
+    elif leaderID is not None:
+        team = get_team_by_leader_id(leaderID)
+    player = get_player_by_player_id(userID)
+    if player is None or team is None:
         return {'result': False, 'team_id': None}
+    player.team_id = team.id
+    session.commit()
+    return {'result': True, 'team_id': team.id}
 
 
 def leave_team(userID: int):
-    try:
-        session = get_session()
-        player = session.query(Player).filter(Player.id == userID).one()
-        team_id = player.team_id
-        player.team_id = None
-        session.commit()
-        session.close()
-        return {'result': True, 'team_id': team_id}
-    except NoResultFound:
-        return {'result': False, 'team_id': team_id}
+    session = get_session()
+    player = get_player_by_player_id(userID)
+    team_id = player.team_id
+    player.team_id = None
+    session.commit()
+    return {'result': True, 'team_id': team_id}

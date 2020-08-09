@@ -4,7 +4,7 @@ from command.hitokoto import HitokotoHandler
 from command.id import GetIDHandler
 from command.removeWhiteList import removeWhiteListHandler
 from command.rtp import rtpHandler
-from command.team_commands import teamButtonHandler, createTeamHandler, recruitHandler
+from command.team_commands import teamButtonHandler, createTeamHandler, recruitHandler,quitTeamHandler
 
 
 def add_handler(dispatcher):
@@ -17,3 +17,4 @@ def add_handler(dispatcher):
     dispatcher.add_handler(teamButtonHandler)
     dispatcher.add_handler(createTeamHandler)
     dispatcher.add_handler(recruitHandler)
+    dispatcher.add_handler(quitTeamHandler)
